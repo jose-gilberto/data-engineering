@@ -3,7 +3,7 @@
 ## Projeto 1: Data Modeling com o Postgres
 Nesse projeto, aplicamos modelagem de dados com o Postgres e construímos uma pipeline ETL usando Python. Uma Startup quer analisar os dados que eles vem coletando de músicas e atividades dos usuários no seu novo aplicativo de streaming de músicas. Atualmente, eles coletam os dados no formato json e o time de análise está particularmente interessado em entender que músicas os usuários estão escutando.
 
-[Link]()
+[Link](./projeto_01)
 
 ## Projeto 2: Data Modeling com o Cassandra
 
@@ -18,7 +18,7 @@ Nesse projeto, aplicamos modelagem de dados com o Cassandra e contruímos uma pi
 
 Nesse projeto, aplicamos a arquitetura de Data Warehouse e construiremos um Data Warehouse na nuvem da AWS. Vamos contruir um pipeline ETL para extrair e transformar os dados armazenados no formato JSON em um bucket s3 e mover os dados para o Warehouse hosteado no Amazon Redshift.
 
-Utilizar o script Redshift IaC - [Link]()
+Utilizar o script Redshift IaC - [Link]()  
 [Link do Projeto]()
 
 ## Projeto 4: Data Lake
