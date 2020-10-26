@@ -27,6 +27,7 @@ def process_song_file(cur, filepath):
     
     print(f"Records inserted for file {filepath}")
     
+    
 def process_log_file(cur, filepath):
     """
     Processa os dados do arquivo de log e insere eles na base Postgres.
@@ -53,9 +54,57 @@ def process_log_file(cur, filepath):
     
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
+        
+    # carrega a tabela de usuários
+    user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
     
+    # insere os dados de usuários
+    for i, row in user_df.iterrows():
+        cur.execute(user_table_insert, row)
     
+    # insere os dados da tabela de songplays
+    for index, row in df.iterrows():
+        
+        # busca o songid e artistid das tabelas de artistas e músicas
+        cur.execute(song_select, (row.song, row.artist, row.length))
+        results = cur.fetchone()
+        
+        if results:
+            songid, artistid = results
+        else:
+            songid, artistid = None, None
 
+        # insere o registro na tabela
+        songplay_data = ( row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
+        cur.execute(songplay_table_insert, songplay_data)  
+
+
+def process_data():
+    """
+    Função que carrega os dados de arquivos de log de eventos e músicas no banco Postgres.
+    :param cur: referência para o cursor do banco
+    :param conn: conexão do banco de dados
+    :param filepath: diretório onde os arquivos estão
+    :param func: função a ser chamada
+    """
+    # pega todos os arquivos no diretório passado
+    all_files = []
+    for root, dirs, files in os.walk(filepath):
+        files = glob.glob(os.path.join(root,'*.json'))
+        for f in files :
+            all_files.append(os.path.abspath(f))
+
+    # pega o total de arquivos encontrados
+    num_files = len(all_files)
+    print('{} files found in {}'.format(num_files, filepath))
+
+    # itera sobre os arquivos e processa os dados deles
+    for i, datafile in enumerate(all_files, 1):
+        func(cur, datafile)
+        conn.commit()
+        print('{}/{} files processed.'.format(i, num_files))
+    
+    
 def main():
     """
     Função principal para carregar os arquivos de músicas e logs no banco de dados.
@@ -63,8 +112,10 @@ def main():
     conn = psycopg2.connect('host=127.0.0.1 dbname=sparkifydb user=postgres password=postgres')
     cur = conn.cursor()
     
-    #
-    #
+    process_data(cur, conn, filepath='data/song_data', func=process_song_file)
+    process_data(cur, conn, filepath='data/log_data', func=process_log_file)
+    
+    conn.close()
 
 if __name__ == '__main__':
     main()
