@@ -12,7 +12,7 @@ Nesse projeto, aplicamos modelagem de dados com o Cassandra e contruímos uma pi
 - Obter as músicas escutadas por um usuário durante uma sessão específica.
 - Obter todos os usuários do app que escutaram uma música específica.
 
-[Link]()
+[Link](./projeto_02)
 
 ## Projeto 3: Data Warehouse
 
